@@ -524,6 +524,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.991
       objectReference: {fileID: 0}
+    - target: {fileID: 1535416229137359878, guid: 258dea61db20476489cb245852f05644, type: 3}
+      propertyPath: m_frameDelay
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 3683503780268928621, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Name
       value: Player

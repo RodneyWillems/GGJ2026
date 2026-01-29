@@ -16,15 +16,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Reload",
-                    "type": "Button",
-                    "id": "bf602646-02dd-423d-bf31-5e2884bcef6e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Mouse",
                     "type": "Value",
                     "id": "370c42fb-ee0c-4951-9fc9-f139d122977d",
@@ -68,20 +59,18 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "8ee52e97-25b6-4203-8acf-c0324728e640",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "c39e0164-5a24-41e8-b582-16abd19b0c48",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard",
-                    "action": "Reload",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "8a22b360-7cc4-47b4-b2ff-925c69feae99",
@@ -96,7 +85,7 @@
                 {
                     "name": "",
                     "id": "7d8d5343-d7c4-47ac-9ed0-5300b5f6debd",
-                    "path": "<Keyboard>/anyKey",
+                    "path": "<Keyboard>/m",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
@@ -200,6 +189,17 @@
                     "processors": "",
                     "groups": ";Keyboard",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b33aee8-b17c-4cbd-b91a-ee8f7460f8a7",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
