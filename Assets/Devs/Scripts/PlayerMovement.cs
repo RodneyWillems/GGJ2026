@@ -41,7 +41,10 @@ public class PlayerMovement : MonoBehaviour
     private float m_maxFlashlightPower;
     private bool m_flashlightOn;
     private List<Quaternion> m_rotationList;
+    private Coroutine m_flashlightRoutine;
+    private Coroutine m_flashlightReloadRoutine;
 
+    //Misc
     private Player m_inputs;
 
     #endregion
@@ -53,10 +56,12 @@ public class PlayerMovement : MonoBehaviour
         //Setup inputs
         m_inputs = new Player();
         m_inputs.Enable();
-        m_inputs.Default.Reload.performed += Reload;
+        m_inputs.Default.Reload.started += StartReload;
+        m_inputs.Default.Reload.canceled += StopReload;
         m_inputs.Default.Mask.performed += Mask;
         m_inputs.Default.Interact.performed += Interact;
         m_inputs.Default.Pause.performed += Pause;
+        m_inputs.Default.Click.performed += Click;
     }
 
     private void OnDisable()
@@ -70,15 +75,35 @@ public class PlayerMovement : MonoBehaviour
         m_rotationList = new();
         m_maxFlashlightPower = m_flashlightPower;
         m_flashlightIntensity = m_flashlight.intensity;
+        m_flashlightOn = true;
+        m_flashlightRoutine = StartCoroutine(Flashlight());
     }
 
     #endregion
 
     #region Inputs
 
-    private void Reload(InputAction.CallbackContext context)
+    private void StartReload(InputAction.CallbackContext context)
     {
-        print("Reloading Flashlight");
+        m_flashlightReloadRoutine = StartCoroutine(ReloadFlashlight());
+        m_flashlight.GetComponent<Animator>().SetBool("Reloading", true);
+        m_flashlightOn = false;
+        m_flashlight.intensity = 0;
+
+        m_inputs.Default.Disable();
+        m_inputs.Default.Reload.Enable();
+
+        if (m_flashlightRoutine == null) return;
+        StopCoroutine(m_flashlightRoutine);
+        m_flashlightRoutine = null;
+    }
+
+    private void StopReload(InputAction.CallbackContext context)
+    {
+        StopCoroutine(m_flashlightReloadRoutine);
+        m_flashlight.GetComponent<Animator>().SetBool("Reloading", false);
+
+        m_inputs.Default.Enable();
     }
 
     private void Mask(InputAction.CallbackContext context)
@@ -111,15 +136,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Click(InputAction.CallbackContext context)
     {
+        print("Clicking");
         m_flashlightOn = !m_flashlightOn;
         if (m_flashlightOn)
         {
             m_flashlight.intensity = m_flashlightIntensity;
-            StartCoroutine(Flashlight());
+            m_flashlightRoutine = StartCoroutine(Flashlight());
         }
         else
         {
             m_flashlight.intensity = 0;
+            StopCoroutine(m_flashlightRoutine);
         }
     }
 
@@ -185,8 +212,8 @@ public class PlayerMovement : MonoBehaviour
                 m_flashlightPower = 0;
                 m_flashlightOn = false;
             }
+            yield return null;
         }
-        yield return null;
     }
 
     private IEnumerator ReloadFlashlight()
@@ -196,6 +223,7 @@ public class PlayerMovement : MonoBehaviour
             m_flashlightPower += m_maxFlashlightPower / m_flashlightReloadRate * Time.deltaTime;
             yield return null;
         }
+        m_flashlight.GetComponent<Animator>().SetBool("Reloading", false);
     }
 
     #endregion
