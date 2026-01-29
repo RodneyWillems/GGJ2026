@@ -17,13 +17,13 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.55109966, g: 0.5438866, b: 0.6289307, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.039
+  m_FogDensity: 0.023
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.26
+  m_AmbientIntensity: 1.14
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.22427906, g: 0.2676034, b: 0.3773585, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: b467c61c2639ec642833282b752e112d, type: 2}
@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 3
-  m_ReflectionIntensity: 0.322
+  m_ReflectionIntensity: 0.184
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1595515080}
   m_UseRadianceAmbientProbe: 0
@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 59811aa8d02c34a4da72935128d3e06b, type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -172,7 +172,7 @@ Terrain:
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 10
-  m_DetailObjectDensity: 0.324
+  m_DetailObjectDensity: 0.615
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
   m_HeightmapMinimumLODSimplification: 0
@@ -299,7 +299,7 @@ Transform:
   m_GameObject: {fileID: 1480837418}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.15656179, z: -0, w: -0.9876682}
-  m_LocalPosition: {x: 44.96, y: 2.2, z: 2.28}
+  m_LocalPosition: {x: 43.544, y: 2.2, z: -2.075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -423,7 +423,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 15.84
+  m_Intensity: 11.32
   m_Range: 10
   m_SpotAngle: 103.39748
   m_InnerSpotAngle: 21.80208
@@ -505,8 +505,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 1
-  m_Color: {r: 0.49292445, g: 0.4884695, b: 0.66666657, a: 1}
-  m_Intensity: 0.6
+  m_Color: {r: 0.49019608, g: 0.4978675, b: 0.6666667, a: 1}
+  m_Intensity: 0.67
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -545,7 +545,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
