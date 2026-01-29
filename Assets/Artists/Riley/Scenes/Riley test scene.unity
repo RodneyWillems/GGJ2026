@@ -374,7 +374,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1373452910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,7 +411,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373452909}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -633,7 +633,7 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.49019608, g: 0.4978675, b: 0.6666667, a: 1}
-  m_Intensity: 0.89
+  m_Intensity: 0.53
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
