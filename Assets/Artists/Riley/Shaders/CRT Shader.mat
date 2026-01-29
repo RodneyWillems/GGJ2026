@@ -38,10 +38,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Blur_Offset: 0.00061
-    - _CRT_Strength: 0.423
+    - _CRT_Strength: 0.62
     - _Scan_Lines_Speed: 0.028
     m_Colors:
-    - _Color: {r: 3.2111173, g: 2.683149, b: 2.3931909, a: 0}
-    - _Scan_Lines_Amount: {r: 34.03, g: 106.5, b: 0, a: 0}
+    - _Color: {r: 6.4222345, g: 5.366298, b: 4.7863817, a: 0}
+    - _Scan_Lines_Amount: {r: 34.03, g: 99.89, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
