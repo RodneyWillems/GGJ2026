@@ -4,7 +4,9 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Gamemanager : MonoBehaviour
 {
-    public static Gamemanager instance;
+    public static Gamemanager Instance;
+
+    public Aids AidsScript;
 
     [SerializeField] private GameObject scareCrow;
     [SerializeField] private GameObject player;
@@ -18,7 +20,7 @@ public class Gamemanager : MonoBehaviour
     private float randomX;
     private float randomZ;
 
-    private bool timing = true;
+    private bool timing = false;
     private int toomuch;
     private bool found = false;
     private Vector2 randompoint;
@@ -26,6 +28,7 @@ public class Gamemanager : MonoBehaviour
     void Start()
     {
         scareCrowTime = scareCrowTimeOr;
+        Instance = this;
     }
 
     private void Update()
@@ -44,6 +47,7 @@ public class Gamemanager : MonoBehaviour
     #region Scarecrow
     public void FindSpawnPoint()
     {
+        scareCrow.transform.GetChild(0).GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
         while (found == false)
         {
             {
@@ -73,28 +77,30 @@ public class Gamemanager : MonoBehaviour
         timing = true;
     }
 
-    public void FocusOnPlayer()
+    public void FocusOnPlayer(float deathTime)
     {
         scareCrow.transform.LookAt(player.transform.position);
-        scareCrow.transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
-        StartCoroutine(ColorChange(0.01f));
+        scareCrow.transform.rotation = Quaternion.Euler(0, scareCrow.transform.rotation.y, 0);
+        AidsScript.StartEmissionChange(deathTime);
     }
 
-    private IEnumerator ColorChange(float changeTime)
-    {
-        while (changing)
-        {
-            scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 0.1f);
-            yield return new WaitForSeconds(changeTime);
-            if(changeTime == 2)
-            {
-                changing = false;
-            }
-        }
-
-        yield return null;
-
-    }
+    //private IEnumerator ColorChange(float deathTime)
+    //{
+    //    float intensity = 0f;
+    //    float maxIntensity = 50;
+    //    print("Doing the cool thing");
+    //    Material material = scareCrow.transform.GetChild(0).GetComponent<MeshRenderer>().material;
+    //    Color emissionColor = material.GetColor("_EmissionColor");
+    //    material.EnableKeyword("_EMISSION");
+    //    material.SetColor("_EmissionColor", emissionColor * intensity);
+    //    while (intensity < maxIntensity)
+    //    {
+    //        print(intensity);
+    //        intensity++;
+    //        material.SetColor("_EmissionColor", emissionColor * intensity);
+    //        yield return new WaitForSeconds(deathTime / maxIntensity);
+    //    }
+    //}
 
     #endregion
 }

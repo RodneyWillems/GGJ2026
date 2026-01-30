@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -45,6 +44,11 @@ public class PlayerMovement : MonoBehaviour
     private Coroutine m_flashlightRoutine;
     private Coroutine m_flashlightReloadRoutine;
 
+    [Header("Camera FOV")]
+    [SerializeField] private int m_endFOV;
+
+    private int m_startFOV;
+
     [Header("Mask")]
     [SerializeField] private GameObject m_maskObject;
     [SerializeField] private Animator m_maskAnimator;
@@ -54,6 +58,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Scarecrow")]
     [SerializeField] private LayerMask m_scareCrowLayer;
     [SerializeField] private int m_timeTillDeath;
+
+    private bool m_checkingForCrow;
 
     //Misc
     private Player m_inputs;
@@ -92,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
         m_flashlightOn = true;
         m_flashlightRoutine = StartCoroutine(Flashlight());
         m_rb = GetComponent<Rigidbody>();
+        m_checkingForCrow = true;
     }
 
     #endregion
@@ -100,7 +107,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartReload(InputAction.CallbackContext context)
     {
-        print("Starting Reload");
         m_flashlightReloadRoutine = StartCoroutine(ReloadFlashlight());
         m_flashlight.GetComponent<Animator>().SetBool("Reloading", true);
         m_flashlightOn = false;
@@ -119,7 +125,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void StopReload(InputAction.CallbackContext context)
     {
-        print("Stopping reload");
         if (m_flashlightReloadRoutine != null)
             StopCoroutine(m_flashlightReloadRoutine);
         m_flashlight.GetComponent<Animator>().SetBool("Reloading", false);
@@ -135,19 +140,19 @@ public class PlayerMovement : MonoBehaviour
         if (m_maskOn)
         {
             m_maskObject.SetActive(true);
-            m_maskAnimator.SetTrigger("Down");
             m_inputs.Default.Walking.Disable();
             m_inputs.Default.Mouse.Disable();
             m_inputs.Default.Click.Disable();
             m_inputs.Default.Reload.Disable();
+            m_maskAnimator.SetTrigger("Down");
         }
         else
         {
-            m_maskAnimator.SetTrigger("Up");
             m_inputs.Default.Walking.Enable();
             m_inputs.Default.Mouse.Enable();
             m_inputs.Default.Click.Enable();
             m_inputs.Default.Reload.Enable();
+            m_maskAnimator.SetTrigger("Up");
             StartCoroutine(MaskAnimation());
         }
     }
@@ -161,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
     private void Interact(InputAction.CallbackContext context)
     {
         //First check if you're looking at something interactable before interacting
-        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 3f, m_interactableLayer))
+        if(Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, 3f, m_interactableLayer))
         {
             hit.transform.GetComponent<Interactable>().Interact(this);
         }
@@ -172,7 +177,6 @@ public class PlayerMovement : MonoBehaviour
         if (Cursor.lockState == CursorLockMode.Locked)
         {
             Cursor.lockState = CursorLockMode.None;
-            print("Pausing");
             Time.timeScale = 0;
             m_pauseMenu.SetActive(true);
             m_inputs.Default.Click.Disable();
@@ -186,7 +190,6 @@ public class PlayerMovement : MonoBehaviour
     public void UnPause()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        print("Unpausing");
         Time.timeScale = 1;
         m_pauseMenu.SetActive(false);
         m_inputs.Default.Click.Enable();
@@ -228,7 +231,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 direction = m_inputs.Default.Mouse.ReadValue<Vector2>();
         transform.Rotate(Vector3.up * direction.x * m_rotatingSpeed * Time.deltaTime);
         m_camera.transform.Rotate(Vector3.right * -direction.y * m_rotatingSpeed * Time.deltaTime);
-        if (m_camera.transform.localRotation.x > 0.9f || m_camera.transform.localRotation.x < -0.9f)
+        if (m_camera.transform.localRotation.x > 0.7f || m_camera.transform.localRotation.x < -0.7f)
         {
             m_camera.transform.Rotate(Vector3.right * direction.y * m_rotatingSpeed * Time.deltaTime);
             return;
@@ -239,24 +242,38 @@ public class PlayerMovement : MonoBehaviour
 
     private void RaycastCheck()
     {
-        bool hitLeft = Physics.Raycast(transform.position, transform.forward - transform.right, out RaycastHit leftHit, 10f, m_scareCrowLayer);
-        bool hitRight = Physics.Raycast(transform.position, transform.forward + transform.right, out RaycastHit rightHit, 10f, m_scareCrowLayer);
-        bool hitStraight = Physics.Raycast(transform.position, transform.forward, out RaycastHit straightHit, 10f, m_scareCrowLayer);
+        if (!m_checkingForCrow) return;
+        bool hitLeft = Physics.Raycast(transform.position + Vector3.up, transform.forward - transform.right, out RaycastHit leftHit, Mathf.Infinity);
+        bool hitRight = Physics.Raycast(transform.position + Vector3.up, transform.forward + transform.right, out RaycastHit rightHit, Mathf.Infinity);
+        bool hitStraight = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit straightHit, Mathf.Infinity);
         if (hitLeft || hitRight || hitStraight)
         {
-            if (hitLeft)
+            if (hitLeft && leftHit.transform.CompareTag("Scarecrow"))
+            {
                 transform.LookAt(leftHit.transform);
-            else if (hitStraight)
+                m_camera.transform.LookAt(leftHit.transform.GetChild(0));
+            }
+            else if (hitStraight && straightHit.transform.CompareTag("Scarecrow"))
             {
                 transform.LookAt(straightHit.transform);
+                m_camera.transform.LookAt(straightHit.transform.GetChild(0));
             }
-            else
+            else if (hitRight && rightHit.transform.CompareTag("Scarecrow"))
+            {
                 transform.LookAt(rightHit.transform);
+                m_camera.transform.LookAt(rightHit.transform.GetChild(0));
+            }
+            else return;
             m_inputs.Default.Walking.Disable();
             m_inputs.Default.Mouse.Disable();
             m_inputs.Default.Click.Disable();
             m_inputs.Default.Reload.Disable();
+            m_flashlight.intensity = 0;
+            StopCoroutine(m_flashlightRoutine);
+            m_checkingForCrow = false;
             StartCoroutine(SeenCrow());
+            StartCoroutine(CameraZoom());
+            Gamemanager.Instance.FocusOnPlayer(m_timeTillDeath);
         }
     }
 
@@ -269,13 +286,25 @@ public class PlayerMovement : MonoBehaviour
             m_inputs.Default.Mouse.Enable();
             m_inputs.Default.Click.Enable();
             m_inputs.Default.Reload.Enable();
-            Gamemanager.instance.FindSpawnPoint();
+            Gamemanager.Instance.FindSpawnPoint(); 
+            m_checkingForCrow = true;
+            m_camera.GetComponent<Camera>().fieldOfView = m_startFOV;
         }
         else
         {
+            Time.timeScale = 0; 
             m_deathScreen.SetActive(true);
         }
         yield return null;
+    }
+
+    private IEnumerator CameraZoom()
+    {
+        while (m_camera.GetComponent<Camera>().fieldOfView > m_endFOV)
+        {
+            m_camera.GetComponent<Camera>().fieldOfView -= 1;
+            yield return new WaitForSeconds(m_timeTillDeath / m_endFOV);
+        }
     }
 
     void FixedUpdate()
@@ -283,6 +312,7 @@ public class PlayerMovement : MonoBehaviour
         Moving();
         Rotate();
         RaycastCheck();
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
     }
 
     #endregion
