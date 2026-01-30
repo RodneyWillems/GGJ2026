@@ -1,10 +1,10 @@
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class Door : Interactable
 {
     [SerializeField] private string doorOrBarn;
 
+    [SerializeField] private GameObject winScreen;
 
     public override void Interact(PlayerMovement player)
     {
@@ -20,7 +20,7 @@ public class Door : Interactable
         {
             if (player.CheckInventory("key 2"))
             {
-                // Win game
+                winScreen.SetActive(true);
             }
         }
        
