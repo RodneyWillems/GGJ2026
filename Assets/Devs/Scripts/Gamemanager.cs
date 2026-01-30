@@ -77,8 +77,7 @@ public class Gamemanager : MonoBehaviour
     {
         scareCrow.transform.LookAt(player.transform.position);
         scareCrow.transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
-       // scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 2);
-        StartCoroutine(ColorChange(2));
+        StartCoroutine(ColorChange(0.01f));
     }
 
     private IEnumerator ColorChange(float changeTime)
@@ -87,6 +86,10 @@ public class Gamemanager : MonoBehaviour
         {
             scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 0.1f);
             yield return new WaitForSeconds(changeTime);
+            if(changeTime == 2)
+            {
+                changing = false;
+            }
         }
 
         yield return null;
