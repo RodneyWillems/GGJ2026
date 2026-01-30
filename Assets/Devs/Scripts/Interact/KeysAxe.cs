@@ -6,7 +6,5 @@ public class KeysAxe : Interactable
     public override void Interact(PlayerMovement player)
     {
         player.UpdateInventory(itemName);
-
-        
     }
 }

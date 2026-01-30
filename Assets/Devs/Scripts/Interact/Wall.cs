@@ -8,16 +8,14 @@ public class Wall : Interactable
     private void Start()
     {
         wallBroken.SetActive(false);
-
     }
 
     public override void Interact(PlayerMovement player)
     {
-        print("Player interacted");
-       // if (player.CheckInventory("axe"))
-       // {
+       if (player.CheckInventory("axe"))
+        {
             gameObject.SetActive(false);
             wallBroken.SetActive(true);
-      // }
+       }
     }
 }

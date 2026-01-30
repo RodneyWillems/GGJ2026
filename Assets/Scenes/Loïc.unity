@@ -461,6 +461,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScareSpawn
       objectReference: {fileID: 0}
+    - target: {fileID: 7204400133870749861, guid: f2a3c8bf5ab7f7d4eb4ac94fb456e255, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3328114455142224730, guid: f2a3c8bf5ab7f7d4eb4ac94fb456e255, type: 3}
     m_RemovedGameObjects: []
