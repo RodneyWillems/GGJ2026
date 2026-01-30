@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private GameObject m_pauseMenu;
+    [SerializeField] private GameObject m_deathScreen;
     [SerializeField] private TextMeshProUGUI m_textBox;
 
     [Header("Movement")]
@@ -44,8 +45,19 @@ public class PlayerMovement : MonoBehaviour
     private Coroutine m_flashlightRoutine;
     private Coroutine m_flashlightReloadRoutine;
 
+    [Header("Mask")]
+    [SerializeField] private GameObject m_maskObject;
+    [SerializeField] private Animator m_maskAnimator;
+
+    private bool m_maskOn;
+
+    [Header("Scarecrow")]
+    [SerializeField] private LayerMask m_scareCrowLayer;
+    [SerializeField] private int m_timeTillDeath;
+
     //Misc
     private Player m_inputs;
+    private Rigidbody m_rb;
 
     #endregion
 
@@ -62,6 +74,8 @@ public class PlayerMovement : MonoBehaviour
         m_inputs.Default.Interact.performed += Interact;
         m_inputs.Default.Pause.performed += Pause;
         m_inputs.Default.Click.performed += Click;
+
+        Time.timeScale = 1;
     }
 
     private void OnDisable()
@@ -77,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
         m_flashlightIntensity = m_flashlight.intensity;
         m_flashlightOn = true;
         m_flashlightRoutine = StartCoroutine(Flashlight());
+        m_rb = GetComponent<Rigidbody>();
     }
 
     #endregion
@@ -85,38 +100,70 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartReload(InputAction.CallbackContext context)
     {
+        print("Starting Reload");
         m_flashlightReloadRoutine = StartCoroutine(ReloadFlashlight());
         m_flashlight.GetComponent<Animator>().SetBool("Reloading", true);
         m_flashlightOn = false;
         m_flashlight.intensity = 0;
 
-        m_inputs.Default.Disable();
-        m_inputs.Default.Reload.Enable();
+        m_inputs.Default.Walking.Disable();
+        m_inputs.Default.Mask.Disable();
+        m_inputs.Default.Click.Disable();
 
-        if (m_flashlightRoutine == null) return;
-        StopCoroutine(m_flashlightRoutine);
-        m_flashlightRoutine = null;
+        if (m_flashlightRoutine != null) 
+        {
+            StopCoroutine(m_flashlightRoutine);
+            m_flashlightRoutine = null;
+        }
     }
 
     private void StopReload(InputAction.CallbackContext context)
     {
-        StopCoroutine(m_flashlightReloadRoutine);
+        print("Stopping reload");
+        if (m_flashlightReloadRoutine != null)
+            StopCoroutine(m_flashlightReloadRoutine);
         m_flashlight.GetComponent<Animator>().SetBool("Reloading", false);
 
-        m_inputs.Default.Enable();
+        m_inputs.Default.Walking.Enable();
+        m_inputs.Default.Mask.Enable();
+        m_inputs.Default.Click.Enable();
     }
 
     private void Mask(InputAction.CallbackContext context)
     {
-        print("Putting mask on");
+        m_maskOn = !m_maskOn;
+        if (m_maskOn)
+        {
+            m_maskObject.SetActive(true);
+            m_maskAnimator.SetTrigger("Down");
+            m_inputs.Default.Walking.Disable();
+            m_inputs.Default.Mouse.Disable();
+            m_inputs.Default.Click.Disable();
+            m_inputs.Default.Reload.Disable();
+        }
+        else
+        {
+            m_maskAnimator.SetTrigger("Up");
+            m_inputs.Default.Walking.Enable();
+            m_inputs.Default.Mouse.Enable();
+            m_inputs.Default.Click.Enable();
+            m_inputs.Default.Reload.Enable();
+            StartCoroutine(MaskAnimation());
+        }
+    }
+
+    private IEnumerator MaskAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        m_maskObject.SetActive(false);
     }
 
     private void Interact(InputAction.CallbackContext context)
     {
         //First check if you're looking at something interactable before interacting
-        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1f, m_interactableLayer))
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 3f, m_interactableLayer))
         {
-            //hit.transform.GetComponent<Interactable>().Interact();
+            hit.transform.GetComponent<Interactable>().Interact(this);
         }
     }
 
@@ -126,17 +173,27 @@ public class PlayerMovement : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             print("Pausing");
+            Time.timeScale = 0;
+            m_pauseMenu.SetActive(true);
+            m_inputs.Default.Click.Disable();
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            print("Unpausing");
+            UnPause();
         }
+    }
+
+    public void UnPause()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        print("Unpausing");
+        Time.timeScale = 1;
+        m_pauseMenu.SetActive(false);
+        m_inputs.Default.Click.Enable();
     }
 
     private void Click(InputAction.CallbackContext context)
     {
-        print("Clicking");
         m_flashlightOn = !m_flashlightOn;
         if (m_flashlightOn)
         {
@@ -158,8 +215,11 @@ public class PlayerMovement : MonoBehaviour
     {
         //To make sure the player moves depending on where they're looking I use transform.forward and transform.right
         Vector2 direction = m_inputs.Default.Walking.ReadValue<Vector2>();
-        transform.position += transform.forward * direction.y * m_walkingSpeed * Time.deltaTime;
-        transform.position += transform.right * direction.x * m_walkingSpeed * Time.deltaTime;
+        Vector3 moveDirection = (transform.forward * direction.y) + (transform.right * direction.x);
+
+        if (direction == Vector2.zero)
+            m_rb.linearVelocity = Vector3.zero;
+        m_rb.linearVelocity = moveDirection * m_walkingSpeed;
     }
 
     private void Rotate()
@@ -177,10 +237,52 @@ public class PlayerMovement : MonoBehaviour
         FlashRotate();
     }
 
+    private void RaycastCheck()
+    {
+        bool hitLeft = Physics.Raycast(transform.position, transform.forward - transform.right, out RaycastHit leftHit, 10f, m_scareCrowLayer);
+        bool hitRight = Physics.Raycast(transform.position, transform.forward + transform.right, out RaycastHit rightHit, 10f, m_scareCrowLayer);
+        bool hitStraight = Physics.Raycast(transform.position, transform.forward, out RaycastHit straightHit, 10f, m_scareCrowLayer);
+        if (hitLeft || hitRight || hitStraight)
+        {
+            if (hitLeft)
+                transform.LookAt(leftHit.transform);
+            else if (hitStraight)
+            {
+                transform.LookAt(straightHit.transform);
+            }
+            else
+                transform.LookAt(rightHit.transform);
+            m_inputs.Default.Walking.Disable();
+            m_inputs.Default.Mouse.Disable();
+            m_inputs.Default.Click.Disable();
+            m_inputs.Default.Reload.Disable();
+            StartCoroutine(SeenCrow());
+        }
+    }
+
+    private IEnumerator SeenCrow()
+    {
+        yield return new WaitForSeconds(m_timeTillDeath);
+        if (m_maskOn)
+        {
+            m_inputs.Default.Walking.Enable();
+            m_inputs.Default.Mouse.Enable();
+            m_inputs.Default.Click.Enable();
+            m_inputs.Default.Reload.Enable();
+            Gamemanager.instance.FindSpawnPoint();
+        }
+        else
+        {
+            m_deathScreen.SetActive(true);
+        }
+        yield return null;
+    }
+
     void FixedUpdate()
     {
         Moving();
         Rotate();
+        RaycastCheck();
     }
 
     #endregion
@@ -211,6 +313,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 m_flashlightPower = 0;
                 m_flashlightOn = false;
+                m_flashlight.intensity = 0;
+                m_flashlightRoutine = null;
             }
             yield return null;
         }
