@@ -196,6 +196,18 @@ PrefabInstance:
       value: 16.41
       objectReference: {fileID: 0}
     - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
+      propertyPath: m_Color.b
+      value: 0.39308167
+      objectReference: {fileID: 0}
+    - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
+      propertyPath: m_Color.g
+      value: 0.67922044
+      objectReference: {fileID: 0}
+    - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
       propertyPath: m_Intensity
       value: 123.46
       objectReference: {fileID: 0}
@@ -253,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
       propertyPath: m_Name
-      value: Lantern
+      value: P_Lantern
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
