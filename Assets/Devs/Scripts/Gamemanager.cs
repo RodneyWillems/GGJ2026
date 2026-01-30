@@ -22,6 +22,8 @@ public class Gamemanager : MonoBehaviour
     private int toomuch;
 
     private bool found = false;
+
+    private Vector2 randompoint;
     void Start()
     {
         scareCrowTime = scareCrowTimeOr;
@@ -35,6 +37,7 @@ public class Gamemanager : MonoBehaviour
             if (scareCrowTime < 0)
             {
                 scareCrowTime = scareCrowTimeOr;
+                found = false;
                 FindSpawnPoint();
             }
         }
@@ -45,9 +48,8 @@ public class Gamemanager : MonoBehaviour
         while (found == false)
         {
             {
-                Vector2 randomPoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
-                scareCrow.transform.position = new Vector3(randomPoint.x, 1, randomPoint.y);
-                Collider[] spawns = Physics.OverlapSphere(randomPoint, 2);
+                randompoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
+                Collider[] spawns = Physics.OverlapSphere(randompoint, 2);
                 toomuch++;
                 if (spawns.Length == 0)
                 {
@@ -56,7 +58,6 @@ public class Gamemanager : MonoBehaviour
                 }
                 else if (toomuch == 10)
                 {
-                    print("gaat te ver kil");
                     found = true;
                     toomuch = 0;
                 }
@@ -66,9 +67,11 @@ public class Gamemanager : MonoBehaviour
 
     public void SpawnScareCrow()
     {
+        scareCrow.transform.position = new Vector3(randompoint.x, 0, randompoint.y);
         scareCrow.transform.GetChild(0).gameObject.SetActive(true);
         found = true;
-        //timing = false;
+        scareCrowTime = scareCrowTimeOr;
+        timing = true;
     }
     #endregion
 }
