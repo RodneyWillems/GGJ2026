@@ -4,9 +4,6 @@ using UnityEngine;
 public class Door : Interactable
 {
     [SerializeField] private string doorOrBarn;
-    [SerializeField] private Animation openDoor;
-    [SerializeField] private Animation openBarnDoor;
-
 
 
     public override void Interact(PlayerMovement player)
@@ -14,18 +11,23 @@ public class Door : Interactable
         if (doorOrBarn == "door")
         {
             print("nice door");
-           // if (player.CheckInventory("key 1"))
-           // {
-                openDoor.Play();
-           // }
+            if (player.CheckInventory("key 1"))
+            {
+                GetComponent<Animator>().SetTrigger("OpenDoor");
+            }
         }
        if (doorOrBarn == "barn")
         {
             if (player.CheckInventory("key 2"))
             {
-                openBarnDoor.Play();
+                // Win game
             }
         }
        
+    }
+
+    public void CloseDoor()
+    {
+        GetComponent<Animator>().SetTrigger("Close");
     }
 }

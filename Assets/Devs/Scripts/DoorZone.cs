@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class DoorZone : MonoBehaviour
 {
-    [SerializeField] private Animation closeDoor;
+    [SerializeField] private Door m_doorToClose;
 
     
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            closeDoor.Play();
+            print("hiero");
+            m_doorToClose.CloseDoor();
         }
     }
 }
