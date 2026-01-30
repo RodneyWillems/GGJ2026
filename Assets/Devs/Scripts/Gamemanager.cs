@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -18,10 +19,10 @@ public class Gamemanager : MonoBehaviour
     private float randomZ;
 
     private bool timing = true;
-
     private int toomuch;
-
     private bool found = false;
+    private Vector2 randompoint;
+    private bool changing = false;
     void Start()
     {
         scareCrowTime = scareCrowTimeOr;
@@ -35,6 +36,7 @@ public class Gamemanager : MonoBehaviour
             if (scareCrowTime < 0)
             {
                 scareCrowTime = scareCrowTimeOr;
+                found = false;
                 FindSpawnPoint();
             }
         }
@@ -45,9 +47,8 @@ public class Gamemanager : MonoBehaviour
         while (found == false)
         {
             {
-                Vector2 randomPoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
-                scareCrow.transform.position = new Vector3(randomPoint.x, 1, randomPoint.y);
-                Collider[] spawns = Physics.OverlapSphere(randomPoint, 2);
+                randompoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
+                Collider[] spawns = Physics.OverlapSphere(randompoint, 2);
                 toomuch++;
                 if (spawns.Length == 0)
                 {
@@ -56,7 +57,6 @@ public class Gamemanager : MonoBehaviour
                 }
                 else if (toomuch == 10)
                 {
-                    print("gaat te ver kil");
                     found = true;
                     toomuch = 0;
                 }
@@ -66,9 +66,32 @@ public class Gamemanager : MonoBehaviour
 
     public void SpawnScareCrow()
     {
+        scareCrow.transform.position = new Vector3(randompoint.x, 0, randompoint.y);
         scareCrow.transform.GetChild(0).gameObject.SetActive(true);
         found = true;
-        //timing = false;
+        scareCrowTime = scareCrowTimeOr;
+        timing = true;
     }
+
+    public void FocusOnPlayer()
+    {
+        scareCrow.transform.LookAt(player.transform.position);
+        scareCrow.transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
+       // scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 2);
+        StartCoroutine(ColorChange(2));
+    }
+
+    private IEnumerator ColorChange(float changeTime)
+    {
+        while (changing)
+        {
+            scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 0.1f);
+            yield return new WaitForSeconds(changeTime);
+        }
+
+        yield return null;
+
+    }
+
     #endregion
 }
