@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -18,12 +19,10 @@ public class Gamemanager : MonoBehaviour
     private float randomZ;
 
     private bool timing = true;
-
     private int toomuch;
-
     private bool found = false;
-
     private Vector2 randompoint;
+    private bool changing = false;
     void Start()
     {
         scareCrowTime = scareCrowTimeOr;
@@ -73,5 +72,26 @@ public class Gamemanager : MonoBehaviour
         scareCrowTime = scareCrowTimeOr;
         timing = true;
     }
+
+    public void FocusOnPlayer()
+    {
+        scareCrow.transform.LookAt(player.transform.position);
+        scareCrow.transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
+       // scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 2);
+        StartCoroutine(ColorChange(2));
+    }
+
+    private IEnumerator ColorChange(float changeTime)
+    {
+        while (changing)
+        {
+            scareCrow.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red * 0.1f);
+            yield return new WaitForSeconds(changeTime);
+        }
+
+        yield return null;
+
+    }
+
     #endregion
 }

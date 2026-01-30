@@ -9,7 +9,7 @@ public class Wall : Interactable
     {
         if (player.CheckInventory("axe"))
         {
-            wallWhole.SetActive(true);
+            wallWhole.SetActive(false);
             wallBroken.SetActive(true);
         }
     }
