@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private GameObject m_pauseMenu;
+    [SerializeField] private GameObject m_deathScreen;
     [SerializeField] private TextMeshProUGUI m_textBox;
 
     [Header("Movement")]
@@ -43,6 +44,16 @@ public class PlayerMovement : MonoBehaviour
     private List<Quaternion> m_rotationList;
     private Coroutine m_flashlightRoutine;
     private Coroutine m_flashlightReloadRoutine;
+
+    [Header("Mask")]
+    [SerializeField] private GameObject m_maskObject;
+    [SerializeField] private Animator m_maskAnimator;
+
+    private bool m_maskOn;
+
+    [Header("Scarecrow")]
+    [SerializeField] private LayerMask m_scareCrowLayer;
+    [SerializeField] private int m_timeTillDeath;
 
     //Misc
     private Player m_inputs;
@@ -120,13 +131,37 @@ public class PlayerMovement : MonoBehaviour
 
     private void Mask(InputAction.CallbackContext context)
     {
-        print("Putting mask on");
+        m_maskOn = !m_maskOn;
+        if (m_maskOn)
+        {
+            m_maskObject.SetActive(true);
+            m_maskAnimator.SetTrigger("Down");
+            m_inputs.Default.Walking.Disable();
+            m_inputs.Default.Mouse.Disable();
+            m_inputs.Default.Click.Disable();
+            m_inputs.Default.Reload.Disable();
+        }
+        else
+        {
+            m_maskAnimator.SetTrigger("Up");
+            m_inputs.Default.Walking.Enable();
+            m_inputs.Default.Mouse.Enable();
+            m_inputs.Default.Click.Enable();
+            m_inputs.Default.Reload.Enable();
+            StartCoroutine(MaskAnimation());
+        }
+    }
+
+    private IEnumerator MaskAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        m_maskObject.SetActive(false);
     }
 
     private void Interact(InputAction.CallbackContext context)
     {
         //First check if you're looking at something interactable before interacting
-        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1f, m_interactableLayer))
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 3f, m_interactableLayer))
         {
             hit.transform.GetComponent<Interactable>().Interact(this);
         }
@@ -202,10 +237,52 @@ public class PlayerMovement : MonoBehaviour
         FlashRotate();
     }
 
+    private void RaycastCheck()
+    {
+        bool hitLeft = Physics.Raycast(transform.position, transform.forward - transform.right, out RaycastHit leftHit, 10f, m_scareCrowLayer);
+        bool hitRight = Physics.Raycast(transform.position, transform.forward + transform.right, out RaycastHit rightHit, 10f, m_scareCrowLayer);
+        bool hitStraight = Physics.Raycast(transform.position, transform.forward, out RaycastHit straightHit, 10f, m_scareCrowLayer);
+        if (hitLeft || hitRight || hitStraight)
+        {
+            if (hitLeft)
+                transform.LookAt(leftHit.transform);
+            else if (hitStraight)
+            {
+                transform.LookAt(straightHit.transform);
+            }
+            else
+                transform.LookAt(rightHit.transform);
+            m_inputs.Default.Walking.Disable();
+            m_inputs.Default.Mouse.Disable();
+            m_inputs.Default.Click.Disable();
+            m_inputs.Default.Reload.Disable();
+            StartCoroutine(SeenCrow());
+        }
+    }
+
+    private IEnumerator SeenCrow()
+    {
+        yield return new WaitForSeconds(m_timeTillDeath);
+        if (m_maskOn)
+        {
+            m_inputs.Default.Walking.Enable();
+            m_inputs.Default.Mouse.Enable();
+            m_inputs.Default.Click.Enable();
+            m_inputs.Default.Reload.Enable();
+            Gamemanager.instance.FindSpawnPoint();
+        }
+        else
+        {
+            m_deathScreen.SetActive(true);
+        }
+        yield return null;
+    }
+
     void FixedUpdate()
     {
         Moving();
         Rotate();
+        RaycastCheck();
     }
 
     #endregion
