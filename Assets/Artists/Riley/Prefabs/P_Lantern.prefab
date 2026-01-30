@@ -44,7 +44,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 69.8
+  m_Intensity: 20
   m_Range: 1.96
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -213,7 +213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
       propertyPath: m_Intensity
-      value: 123.46
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -6722085885383957590, guid: 358b717d607261f48be52c0ba4c25500, type: 3}
       propertyPath: m_SpotAngle
