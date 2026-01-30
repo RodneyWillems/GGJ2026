@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Camera FOV")]
     [SerializeField] private int m_endFOV;
 
-    private int m_startFOV;
+    private float m_startFOV;
 
     [Header("Mask")]
     [SerializeField] private GameObject m_maskObject;
@@ -99,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
         m_flashlightRoutine = StartCoroutine(Flashlight());
         m_rb = GetComponent<Rigidbody>();
         m_checkingForCrow = true;
+        m_startFOV = m_camera.GetComponent<Camera>().fieldOfView;
     }
 
     #endregion
@@ -248,6 +249,7 @@ public class PlayerMovement : MonoBehaviour
         bool hitStraight = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit straightHit, Mathf.Infinity);
         if (hitLeft || hitRight || hitStraight)
         {
+            print("Hit something");
             if (hitLeft && leftHit.transform.CompareTag("Scarecrow"))
             {
                 transform.LookAt(leftHit.transform);
@@ -292,7 +294,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0; 
+            Time.timeScale = 0;
+            m_inputs.Default.Disable();
             m_deathScreen.SetActive(true);
         }
         yield return null;
