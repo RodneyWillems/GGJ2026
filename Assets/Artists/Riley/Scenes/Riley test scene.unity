@@ -5951,6 +5951,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_BirdWatchingTower
       objectReference: {fileID: 0}
+    - target: {fileID: 2334259659995735139, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3616436856409019263, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3712798822363223044, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5268371325415527923, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616084825661519226, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7382663622170553756, guid: d22fbb34fa3001449b8c904580d21bdf, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9
