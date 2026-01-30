@@ -3,6 +3,8 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Gamemanager : MonoBehaviour
 {
+    public static Gamemanager instance;
+
     [SerializeField] private GameObject scareCrow;
     [SerializeField] private GameObject player;
 
@@ -43,7 +45,7 @@ public class Gamemanager : MonoBehaviour
         while (found == false)
         {
             {
-                Vector2 randomPoint = (Vector2)player.transform.position + UnityEngine.Random.insideUnitCircle * 5;
+                Vector2 randomPoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
                 scareCrow.transform.position = new Vector3(randomPoint.x, 1, randomPoint.y);
                 Collider[] spawns = Physics.OverlapSphere(randomPoint, 2);
                 toomuch++;
