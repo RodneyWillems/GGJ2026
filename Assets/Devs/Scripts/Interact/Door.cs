@@ -13,10 +13,11 @@ public class Door : Interactable
     {
         if (doorOrBarn == "door")
         {
-            if (player.CheckInventory("key 1"))
-            {
+            print("nice door");
+           // if (player.CheckInventory("key 1"))
+           // {
                 openDoor.Play();
-            }
+           // }
         }
        if (doorOrBarn == "barn")
         {
