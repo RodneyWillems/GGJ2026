@@ -16,6 +16,7 @@ public class Wall : Interactable
         {
             gameObject.SetActive(false);
             wallBroken.SetActive(true);
-       }
+            GetComponent<AudioSource>().Play();
+        }
     }
 }

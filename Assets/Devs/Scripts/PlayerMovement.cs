@@ -12,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private GameObject m_pauseMenu;
     [SerializeField] private GameObject m_deathScreen;
-    [SerializeField] private TextMeshProUGUI m_textBox;
 
     [Header("Movement")]
     [SerializeField] private int m_walkingSpeed;
@@ -61,6 +60,15 @@ public class PlayerMovement : MonoBehaviour
 
     private bool m_checkingForCrow;
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip m_maskOnSFX;
+    [SerializeField] private AudioClip m_maskOffSFX;
+    [SerializeField] private AudioClip m_maskBreathing;
+
+    private AudioSource m_walkingSource;
+    private AudioSource m_maskSource;
+    private AudioSource m_scareCrowSource;
+
     //Misc
     private Player m_inputs;
     private Rigidbody m_rb;
@@ -80,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
         m_inputs.Default.Interact.performed += Interact;
         m_inputs.Default.Pause.performed += Pause;
         m_inputs.Default.Click.performed += Click;
+        m_inputs.Default.Walking.performed += ctx =>
+        {
+            if (!m_walkingSource.isPlaying)
+                m_walkingSource.Play();
+        };
 
         Time.timeScale = 1;
     }
@@ -100,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
         m_checkingForCrow = true;
         m_startFOV = m_camera.GetComponent<Camera>().fieldOfView;
+        m_walkingSource = GetComponent<AudioSource>();
+        m_maskSource = m_camera.GetComponent<AudioSource>();
     }
 
     #endregion
@@ -137,6 +152,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Mask(InputAction.CallbackContext context)
     {
+        //Either put the mask on or take it off
+        m_maskSource.Stop();
+        m_maskSource.loop = false;
         m_maskOn = !m_maskOn;
         if (m_maskOn)
         {
@@ -146,6 +164,7 @@ public class PlayerMovement : MonoBehaviour
             m_inputs.Default.Click.Disable();
             m_inputs.Default.Reload.Disable();
             m_maskAnimator.SetTrigger("Down");
+            m_maskSource.clip = m_maskOnSFX;
         }
         else
         {
@@ -154,14 +173,24 @@ public class PlayerMovement : MonoBehaviour
             m_inputs.Default.Click.Enable();
             m_inputs.Default.Reload.Enable();
             m_maskAnimator.SetTrigger("Up");
+            m_maskSource.clip = m_maskOffSFX;
             StartCoroutine(MaskAnimation());
         }
+        m_maskSource.Play();
     }
 
     private IEnumerator MaskAnimation()
     {
         yield return new WaitForSeconds(0.5f);
         m_maskObject.SetActive(false);
+    }
+
+    private IEnumerator StartBreathing()
+    {
+        yield return new WaitForSeconds(0.5f);
+        m_maskSource.clip = m_maskBreathing;
+        m_maskSource.loop = true;
+        m_maskSource.Play();
     }
 
     private void Interact(InputAction.CallbackContext context)
@@ -171,6 +200,12 @@ public class PlayerMovement : MonoBehaviour
         {
             hit.transform.GetComponent<Interactable>().Interact(this);
         }
+    }
+
+    public void WinGame()
+    {
+        m_inputs.Disable();
+        m_key1Slot.transform.parent.gameObject.SetActive(false);
     }
 
     private void Pause(InputAction.CallbackContext context)
@@ -198,6 +233,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Click(InputAction.CallbackContext context)
     {
+        //Toggle flashlight on click
         m_flashlightOn = !m_flashlightOn;
         if (m_flashlightOn)
         {
@@ -222,7 +258,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = (transform.forward * direction.y) + (transform.right * direction.x);
 
         if (direction == Vector2.zero)
-            m_rb.linearVelocity = Vector3.zero;
+        {
+            m_walkingSource.Stop();
+        }
         m_rb.linearVelocity = moveDirection * m_walkingSpeed;
     }
 
@@ -243,29 +281,33 @@ public class PlayerMovement : MonoBehaviour
 
     private void RaycastCheck()
     {
+        //Check with 3 raycasts if the player is looking at the Scarecrow
         if (!m_checkingForCrow) return;
         bool hitLeft = Physics.Raycast(transform.position + Vector3.up, transform.forward - transform.right, out RaycastHit leftHit, Mathf.Infinity);
         bool hitRight = Physics.Raycast(transform.position + Vector3.up, transform.forward + transform.right, out RaycastHit rightHit, Mathf.Infinity);
         bool hitStraight = Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit straightHit, Mathf.Infinity);
         if (hitLeft || hitRight || hitStraight)
         {
-            print("Hit something");
             if (hitLeft && leftHit.transform.CompareTag("Scarecrow"))
             {
                 transform.LookAt(leftHit.transform);
                 m_camera.transform.LookAt(leftHit.transform.GetChild(0));
+                m_scareCrowSource = leftHit.transform.GetComponent<AudioSource>();
             }
             else if (hitStraight && straightHit.transform.CompareTag("Scarecrow"))
             {
                 transform.LookAt(straightHit.transform);
                 m_camera.transform.LookAt(straightHit.transform.GetChild(0));
+                m_scareCrowSource = straightHit.transform.GetComponent<AudioSource>();
             }
             else if (hitRight && rightHit.transform.CompareTag("Scarecrow"))
             {
                 transform.LookAt(rightHit.transform);
                 m_camera.transform.LookAt(rightHit.transform.GetChild(0));
+                m_scareCrowSource = rightHit.transform.GetComponent<AudioSource>();
             }
             else return;
+            m_scareCrowSource.Play();
             m_inputs.Default.Walking.Disable();
             m_inputs.Default.Mouse.Disable();
             m_inputs.Default.Click.Disable();
@@ -281,6 +323,7 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator SeenCrow()
     {
+        // When the player sees the Scarecrow they get the chance to still put the mask on or they die
         yield return new WaitForSeconds(m_timeTillDeath);
         if (m_maskOn)
         {
@@ -291,6 +334,7 @@ public class PlayerMovement : MonoBehaviour
             Gamemanager.Instance.FindSpawnPoint(); 
             m_checkingForCrow = true;
             m_camera.GetComponent<Camera>().fieldOfView = m_startFOV;
+            m_scareCrowSource.Stop();
         }
         else
         {
@@ -306,7 +350,7 @@ public class PlayerMovement : MonoBehaviour
         while (m_camera.GetComponent<Camera>().fieldOfView > m_endFOV)
         {
             m_camera.GetComponent<Camera>().fieldOfView -= 1;
-            yield return new WaitForSeconds(m_timeTillDeath / m_endFOV);
+            yield return new WaitForSeconds(m_timeTillDeath / (m_startFOV - m_endFOV));
         }
     }
 

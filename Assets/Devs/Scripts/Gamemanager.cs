@@ -19,7 +19,7 @@ public class Gamemanager : MonoBehaviour
     private float randomX;
     private float randomZ;
 
-    private bool timing = false;
+    private bool timing = true;
     private int toomuch;
     private bool found = false;
     private Vector2 randompoint;
