@@ -22,7 +22,7 @@ public class Gamemanager : MonoBehaviour
     private bool timing = true;
     private int toomuch;
     private bool found = false;
-    private Vector2 randompoint;
+    private Vector3 randompoint;
     private bool changing = false;
     void Start()
     {
@@ -50,16 +50,17 @@ public class Gamemanager : MonoBehaviour
         while (found == false)
         {
             {
-                randompoint = (Vector2)player.transform.position + Random.insideUnitCircle * 5;
-                Collider[] spawns = Physics.OverlapSphere(randompoint, 2);
+                randompoint = Random.insideUnitSphere * scareCrowDistance + player.transform.position;
+                Collider[] spawns = Physics.OverlapSphere(new(randompoint.x, 1, randompoint.z), 0.3f);
                 toomuch++;
                 if (spawns.Length == 0)
                 {
                     found = true;
                     SpawnScareCrow();
                 }
-                else if (toomuch == 10)
+                else if (toomuch == 100)
                 {
+                    Debug.LogError("Impossible location");
                     found = true;
                     toomuch = 0;
                 }
@@ -69,7 +70,8 @@ public class Gamemanager : MonoBehaviour
 
     public void SpawnScareCrow()
     {
-        scareCrow.transform.position = new Vector3(randompoint.x, 0, randompoint.y);
+        scareCrow.transform.position = new Vector3(randompoint.x, 0, randompoint.z);
+        print(new Vector3(randompoint.x, 0, randompoint.y));
         scareCrow.transform.GetChild(0).gameObject.SetActive(true);
         found = true;
         scareCrowTime = scareCrowTimeOr;
