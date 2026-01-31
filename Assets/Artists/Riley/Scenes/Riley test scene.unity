@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.4
+  m_AmbientIntensity: 0.67
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.22427906, g: 0.2676034, b: 0.3773585, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: b467c61c2639ec642833282b752e112d, type: 2}
@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 4a7b5e9ed46f18b42b892ff04d3e2434, type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: d6dce8e1b30a19e41aa4494a2924559d, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3025,21 +3025,21 @@ AudioSource:
   m_GameObject: {fileID: 679136957}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -8127562287114107415, guid: 5454f991073bf1848bb3f567f1b6b149, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: b3675b169c9b2ce478c8334df32834b0, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.41
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
+  Priority: 91
+  DopplerLevel: 2.4
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: 0
+  Pan2D: 0.2
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
@@ -3073,7 +3073,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.434
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3088,7 +3088,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.88055557
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3122,18 +3122,18 @@ AudioSource:
   m_GameObject: {fileID: 679136957}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -8127562287114107415, guid: 5454f991073bf1848bb3f567f1b6b149, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 7bf5c85ed9442084ba40e3010ee20b36, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.43
+  m_Volume: 0.278
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 2.4
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -3170,7 +3170,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.584
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3185,7 +3185,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.675
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -5544,9 +5544,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 766538266263253672, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 5454f991073bf1848bb3f567f1b6b149, type: 2}
     - target: {fileID: 1576710290072335863, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 215.02
+      value: 263.4
       objectReference: {fileID: 0}
     - target: {fileID: 1576710290072335863, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5554,7 +5558,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1576710290072335863, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 228.4
+      value: 2.95
       objectReference: {fileID: 0}
     - target: {fileID: 1576710290072335863, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5583,6 +5587,30 @@ PrefabInstance:
     - target: {fileID: 1576710290072335863, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Size.x
+      value: 0.5642395
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Size.y
+      value: 2.21098
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Size.z
+      value: 0.44411469
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Center.x
+      value: -0.025314331
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Center.y
+      value: 1.885278
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984583466652218119, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
+      propertyPath: m_Center.z
+      value: 0.036865234
       objectReference: {fileID: 0}
     - target: {fileID: 8013750076270114268, guid: 4b3b7ba261c19be49bd1335229fd978b, type: 3}
       propertyPath: m_Name
@@ -6943,6 +6971,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 21162233629330798, guid: 258dea61db20476489cb245852f05644, type: 3}
+      propertyPath: m_Volume
+      value: 0.605
+      objectReference: {fileID: 0}
+    - target: {fileID: 21162233629330798, guid: 258dea61db20476489cb245852f05644, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -8127562287114107415, guid: 5454f991073bf1848bb3f567f1b6b149, type: 2}
     - target: {fileID: 293002458063870758, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_AdditionalLightsShadowResolutionTier
       value: 0
@@ -7009,7 +7045,7 @@ PrefabInstance:
       objectReference: {fileID: 1492094678}
     - target: {fileID: 1535416229137359878, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_frameDelay
-      value: 12
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1535416229137359878, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_maskObject
@@ -7038,6 +7074,10 @@ PrefabInstance:
     - target: {fileID: 3683503780268928621, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3746169029461810370, guid: 258dea61db20476489cb245852f05644, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.58
       objectReference: {fileID: 0}
     - target: {fileID: 4384056968674804452, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Size.x
@@ -7069,23 +7109,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Range
-      value: 40
+      value: 59.6
       objectReference: {fileID: 0}
     - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Color.b
-      value: 0.48499107
+      value: 0.8459119
       objectReference: {fileID: 0}
     - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Color.g
-      value: 0.9206735
+      value: 0.940404
       objectReference: {fileID: 0}
     - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Color.r
-      value: 0.9924528
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Intensity
-      value: 40
+      value: 151.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555445828144473198, guid: 258dea61db20476489cb245852f05644, type: 3}
+      propertyPath: m_SpotAngle
+      value: 63.985355
       objectReference: {fileID: 0}
     - target: {fileID: 6021991471426473803, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_Enabled
@@ -7113,19 +7157,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 0.9961454
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -0.087717935
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7133,7 +7177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: -10.065
       objectReference: {fileID: 0}
     - target: {fileID: 8657936179933489960, guid: 258dea61db20476489cb245852f05644, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -8146,13 +8190,13 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.49019608, g: 0.4978675, b: 0.6666667, a: 1}
-  m_Intensity: 0.68
+  m_Intensity: 1.26
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
